@@ -27,35 +27,6 @@
             </span>
         </div>
     </div>
-
-    {% if other_balances %}
-    <div class="row">
-        <div class="col-md-4">
-            <label>
-                <b>Other:</b>
-            </label>
-        </div>
-        <div class="col-md-8">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Currency</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for balance in other_balances|dictsortreversed:"amount" %}
-                    <tr>
-                        <td>{{ balance.currency }}</td>
-                        <td>{{ balance.amount|floatformat:-8 }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
-
     <div>
         <table class="table table-striped">
             <thead>
@@ -67,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for balance in balances|dictsortreversed:"amount_fiat" %}
+                {% for balance in balances|dictsortreversed:"amount" %}
                 <tr>
                     <td>{{ balance.currency }}</td>
                     <td>{{ balance.amount|floatformat:-8 }}</td>

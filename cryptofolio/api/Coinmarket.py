@@ -41,7 +41,7 @@ class Coinmarket:
                     }
                 )
             else:
-                other_balances.append(
+                balances.append(
                     {
                         'currency': currency,
                         'amount': crypto_balances[currency]

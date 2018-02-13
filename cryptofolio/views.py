@@ -38,7 +38,7 @@ def __get_fiat_piechart(balances, fiat):
         'charttype': "pieChart",
         'chartdata': {
             'x': [x['currency'] for x in balances],
-            'y1': [x['amount_fiat'] for x in balances],
+            'y1': [x.get('amount_fiat', 0) for x in balances],
             'extra1': {
                 "tooltip": {
                     "y_start": "",
@@ -154,7 +154,7 @@ def home(request):
     user_time_series = models.TimeSeries.objects.filter(
         user=request.user, fiat=fiat)
 
-    total_fiat = sum(x['amount_fiat'] for x in balances)
+    total_fiat = sum(x['amount_fiat'] for x in balances if 'amount_fiat' in x)
 
     for balance in balances:
         try:
@@ -164,8 +164,10 @@ def home(request):
         except models.CurrencyTimestamp.DoesNotExist:
             balance['timestamp'] = ""
         balance['addresses'] = models.AddressInput.objects\
-                                        .filter(currency=balance['currency'])
-        balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
+                                        .filter(user=request.user,
+                                                currency=balance['currency'])
+        if 'amount_fiat' in balance:
+            balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
 
     return render(
         request,
