@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -78,8 +80,8 @@ class ManualInput(models.Model):
 
 class AddressInput(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now=True)
     currency = models.CharField(max_length=10)
+    timestamp = models.DateTimeField(auto_now=True)
     address = models.CharField(max_length=100)
     amount = models.FloatField(default=None, blank=True, null=True)
 
@@ -100,7 +102,9 @@ class AddressInput(models.Model):
         elif self.currency == 'XRP':
             addr = 'https://bithomp.com/explorer/{}'.format(self.address)
         elif self.currency == 'ETH':
-            addr = 'https://etherscan.io/address/{}'.format(self.address)            
+            addr = 'https://etherscan.io/address/{}'.format(self.address)
+        else:
+            addr = "#"
         return addr
 
 class TimeSeries(models.Model):
@@ -126,6 +130,12 @@ class BalanceTimeSeries(models.Model):
                                 self.amount, self.currency)
 
 
+class CurrencyTimestamp(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    currency = models.CharField(max_length=10, default='BTC')
+    timestamp = models.DateTimeField(auto_now=True)
+
+
 def update_exchange_balances(exchange_accounts):
     has_errors = False
     errors = []
@@ -148,6 +158,12 @@ def update_exchange_balances(exchange_accounts):
                 exchange_balance.amount = balances[currency]
                 exchange_balance.save()
 
+                ct, crt = CurrencyTimestamp.objects.get_or_create(
+                                                    user=exchange_account.user,
+                                                    currency=currency)
+                ct.timestamp = datetime.datetime.now()
+                ct.save()
+
             for exchange_balance in exchange_balances:
                 currency = exchange_balance.currency
                 if currency not in balances:
@@ -164,6 +180,12 @@ def update_address_input_balances(user):
     for address_input in address_inputs:
         address_input.amount = result[address_input.address]
         address_input.save()
+
+        ct, crt = CurrencyTimestamp.objects.get_or_create(
+                                            user=user,
+                                            currency=address_input.currency)
+        ct.timestamp = datetime.datetime.now()
+        ct.save()
 
 
 def get_aggregated_balances(exchange_accounts, manual_inputs, address_inputs):

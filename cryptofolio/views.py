@@ -157,6 +157,12 @@ def home(request):
     total_fiat = sum(x['amount_fiat'] for x in balances)
 
     for balance in balances:
+        try:
+            balance['timestamp'] = models.CurrencyTimestamp.objects.get(
+                                            currency=balance['currency'],
+                                            user=request.user).timestamp
+        except models.CurrencyTimestamp.DoesNotExist:
+            balance['timestamp'] = ""
         balance['addresses'] = models.AddressInput.objects\
                                         .filter(currency=balance['currency'])
         balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
