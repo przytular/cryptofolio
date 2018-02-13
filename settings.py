@@ -14,16 +14,16 @@ import os
 import raven
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get('SECRET_KEY', 'secret_key')
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     # local testing
     '0.0.0.0',
     '127.0.0.1',
     'localhost',
     # production
-    'cryptofolio.herokuapp.com'
+    'moonfolio-dev.herokuapp.com'
 ]
 
 # Application definition
@@ -84,14 +84,14 @@ LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 # password reset email backend
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+# EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@cryptofol.io'
 SERVER_EMAIL = 'system@cryptofol.io'
-SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+# SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '123')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ['DB_NAME'],
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['DB_PASSWORD'],
@@ -132,7 +132,7 @@ STATICFILES_DIRS=(
     os.path.join(BASE_DIR, 'cryptofolio/static'),
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 BOWER_INSTALLED_APPS = (
     'd3#3.3.13',
@@ -146,7 +146,7 @@ BOWER_INSTALLED_APPS = (
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 BOWER_PATH = '/usr/local/bin/bower'
 
-FIELD_ENCRYPTION_KEY = os.environ['FIELD_ENCRYPTION_KEY']
+FIELD_ENCRYPTION_KEY = os.environ.get('FIELD_ENCRYPTION_KEY', b'ldzsKjRTyxegFwq8PvWxmsFeWWtAv97bzJ66hfr0hl8=')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -156,7 +156,7 @@ except:
     git_commit_hash = 'unknown hash'
 
 if not DEBUG:
-    SENTRY_DSN = os.environ['SENTRY_DSN']
+    SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
         'release': os.environ.get(

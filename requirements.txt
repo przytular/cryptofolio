@@ -21,6 +21,7 @@ django-twitter-bootstrap==3.3.0
 dominate==2.1.17
 gdax==1.0.6
 gunicorn==19.7.1
+heroku==0.1.4
 hyperlink==17.3.1
 idna==2.6
 incremental==17.5.0
@@ -29,8 +30,8 @@ Jinja2==2.9.6
 krakenex==2.0.0
 liqui==1.0.1
 MarkupSafe==1.0
-mysqlclient==1.3.12
 poloniex==0.0.11
+psycopg2==2.7.4
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
 pycparser==2.18
@@ -39,6 +40,7 @@ pyetherscan==0.1.2
 pyOpenSSL==17.4.0
 python-binance==0.4.1
 python-bittrex==0.2.1
+python-dateutil==1.5
 python-http-client==3.0.0
 python-nvd3==0.14.2
 python-slugify==1.1.4
