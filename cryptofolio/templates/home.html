@@ -63,6 +63,7 @@
                     <th>Currency</th>
                     <th>Amount</th>
                     <th>Amount in {{ fiat }}</th>
+                    <th>Link</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,6 +74,11 @@
                     <td>
                         {{ balance.amount_fiat|floatformat:-8 }}
                         ({{ balance.amount_fiat_pct|floatformat:-2 }}%)
+                    </td>
+                    <td>
+                        {% for addr in balance.addresses %}
+                        <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i></a>
+                        {% endfor %}
                     </td>
                 </tr>
                 {% endfor %}

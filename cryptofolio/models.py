@@ -87,6 +87,21 @@ class AddressInput(models.Model):
         return "%s %s %s %s %s" % (self.user.username, self.timestamp,
                                    self.currency, self.address, self.amount)
 
+    @property
+    def block_explorer_link(self):
+        if self.currency == 'BTC':
+            addr = 'https://blockchain.info/de/address/{}'.format(self.address)
+        elif self.currency == 'BCH':
+            addr = 'https://blockdozer.com/insight/address/bitcoincash:{}'\
+                                                    .format(self.address)
+        elif self.currency == 'LTC':
+            addr = 'https://chainz.cryptoid.info/ltc/address.dws?{}.htm'\
+                                                    .format(self.address)
+        elif self.currency == 'XRP':
+            addr = 'https://bithomp.com/explorer/{}'.format(self.address)
+        elif self.currency == 'ETH':
+            addr = 'https://etherscan.io/address/{}'.format(self.address)            
+        return addr
 
 class TimeSeries(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
