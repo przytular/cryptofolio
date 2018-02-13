@@ -63,6 +63,7 @@ class ExchangeBalance(models.Model):
     def __str__(self):
         return "%s %s %s %s" % (
             self.exchange_account,
+            self.amount,
             self.currency,
             self.timestamp)
 
