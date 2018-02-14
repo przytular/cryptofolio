@@ -13,4 +13,4 @@ admin.site.register(UserProfile)
 admin.site.register(ManualInput)
 admin.site.register(TimeSeries)
 admin.site.register(BalanceTimeSeries)
-
+admin.site.register(AddressInput)

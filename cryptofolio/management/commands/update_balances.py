@@ -50,9 +50,9 @@ class Command(BaseCommand):
         now = timezone.now()
 
         for balance in balances:
-            total += balance['amount_fiat']
+            total += balance.get('amount_fiat', 0)
             entry = BalanceTimeSeries(
-                user=user, amount=balance['amount_fiat'],
+                user=user, amount=balance.get('amount_fiat', 0),
                 currency=balance['currency'], fiat=fiat, timestamp=now)
             entry.save()
 

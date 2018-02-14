@@ -166,7 +166,8 @@ def home(request):
         balance['addresses'] = models.AddressInput.objects\
                                         .filter(user=request.user,
                                                 currency=balance['currency'])
-        if 'amount_fiat' in balance:
+
+        if 'amount_fiat' in balance and total_fiat != 0:
             balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
 
     return render(

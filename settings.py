@@ -101,6 +101,15 @@ DATABASES = {
 }
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
@@ -142,6 +151,8 @@ BOWER_INSTALLED_APPS = (
     'tether#1.4.0',
     'bootstrap#4.0.0-alpha.6',
 )
+
+ETHERSCAN_API_KEY = os.environ.get('ETHERSCAN_API_KEY', '')
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 BOWER_PATH = '/usr/local/bin/bower'
