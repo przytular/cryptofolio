@@ -7,15 +7,19 @@
         <link rel="stylesheet" type="text/css" href="{% static 'tether/dist/css/tether.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'blue.css' %}">
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}"/>
         <title>{% block title %}Cryptofolio{% endblock %}</title>
     </head>
     <body>
-        <header>
-			<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse justify-content-between">
-                <a class="navbar-brand" href="{% url 'home' %}">
-                    Moonfolio
-                </a>
+        <header class="topbar">
+			<nav class="navbar top-navbar navbar-toggleable-sm navbar-light justify-content-between">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'home' %}">
+                        <!-- Logo icon --><b>
+                            <span class="text-white">Moonfolio</span>
+                        </b></a>
+                </div>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
