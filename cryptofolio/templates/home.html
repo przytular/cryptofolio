@@ -13,7 +13,19 @@
     {% endif %}
 </head>
 <body>
-
+    <div class="row py-2">
+        <div class="col-xs-12">
+            <form onchange="submit();" class="form-inline mr-auto" action="{% url 'portfolio-change' %}">
+                <select name='portfolio' class="form-control">
+                        <option value="---">default</option>
+                    {% for p in portfolio_list %}
+                        <option value="{{ p.pk }}" 
+                        {% if p.pk == request.user.userprofile.portfolio.pk %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
     {% if has_data == True %}
     <div class="row py-2">
         <div class="col-md-4">

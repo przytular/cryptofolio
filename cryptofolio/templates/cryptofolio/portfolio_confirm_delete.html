@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<p>Are you sure, you want to delete portfolio "{{ object.name }}" ?
+	All exchange keys and balances would be lost.</p>
+	<form method="POST">{% csrf_token %}
+		<button type="submit" class="btn btn-danger">Delete</button>
+		<a class="btn btn-primary" href="{% url 'details' %}">Go back</a>
+	</form>
+{% endblock %}

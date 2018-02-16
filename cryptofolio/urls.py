@@ -4,14 +4,31 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    url(r'^$',
+        views.home,
+        name='home'
+    ),
+    url(r'^portfolio/create/$',
+        views.PortfolioCreate.as_view(),
+        name='portfolio-create'
+    ),
+    url(r'^portfolio/delete/(?P<pk>\d+)/$',
+        views.PortfolioDelete.as_view(),
+        name='portfolio-delete'
+    ),
+    url(
+        r'portfolio/change/$',
+        views.portfolio_change,
+        name='portfolio-change'
+    ),
     url(
         r'^login/$',
         views.login,
         name='login'
     ),
     url(r'^logout/$', auth_views.logout,
-        {'template_name': 'logout.html'}, name='logout'),
+        {'template_name': 'logout.html'}, name='logout'
+    ),
     url(
         r'^password_reset/$',
         auth_views.password_reset,

@@ -20,9 +20,22 @@ class Currency(models.Model):
         return self.name
 
 
+class Portfolio(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=20, default='Portfolio')
+
+    def __str__(self):
+        return self.name
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     fiat = models.CharField(max_length=10, default='USD')
+    portfolio = models.ForeignKey(
+        Portfolio,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
 
     def __str__(self):
         return "%s %s" % (self.user, self.fiat)
@@ -36,6 +49,8 @@ class Exchange(models.Model):
 
 
 class ExchangeAccount(models.Model):
+    portfolio = models.ForeignKey(Portfolio, blank=True, null=True,
+        on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
     key = EncryptedCharField(max_length=1024)
@@ -73,6 +88,11 @@ class ManualInput(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     currency = models.CharField(max_length=10)
     amount = models.FloatField(default=None, blank=True, null=True)
+    portfolio = models.ForeignKey(
+        Portfolio,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s %s %s %s" % (self.user.username, self.timestamp,
@@ -85,6 +105,11 @@ class AddressInput(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     address = models.CharField(max_length=100)
     amount = models.FloatField(default=None, blank=True, null=True)
+    portfolio = models.ForeignKey(
+        Portfolio,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s %s %s %s %s" % (self.user.username, self.timestamp,
@@ -107,6 +132,7 @@ class AddressInput(models.Model):
         else:
             addr = "#"
         return addr
+
 
 class TimeSeries(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

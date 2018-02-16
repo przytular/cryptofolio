@@ -48,9 +48,23 @@ class UserChangeFiatForm(forms.ModelForm):
         empty_label=None,
         help_text='<ul><li>Preffered currency</li></ul>')
 
+    portfolio = forms.ModelChoiceField(
+        required=False,
+        queryset=models.Portfolio.objects.filter(user=None)[:1],
+        empty_label=None,
+        help_text='<ul><li>Current portfolio</li></ul>')
+
+    def clean_portfolio(self):
+        return self.cleaned_data['portfolio'] or None
+
+    def __init__(self, *args, **kwargs):
+        super(UserChangeFiatForm, self).__init__(*args, **kwargs)
+        self.fields['portfolio'].queryset = models.Portfolio.objects.filter(
+            user=self.instance.user)
+
     class Meta:
         model = models.UserProfile
-        fields = ('fiat', )
+        fields = ('fiat', 'portfolio')
 
 
 class ManualInputForm(forms.ModelForm):

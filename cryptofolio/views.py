@@ -21,7 +21,7 @@ from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-
+from django.views.generic.edit import CreateView, DeleteView
 from . import forms
 from . import models
 
@@ -134,14 +134,29 @@ def __get_time_series_chart(balance_time_series, fiat):
 
 @login_required
 def home(request):
+    portfolio_list = models.Portfolio.objects.filter(user=request.user)
     fiat = request.user.userprofile.fiat
     exchange_accounts = models.ExchangeAccount.objects.filter(
-        user=request.user)
-    manual_inputs = models.ManualInput.objects.filter(user=request.user)
-    address_inputs = models.AddressInput.objects.filter(user=request.user)
+        user=request.user,
+        portfolio=request.user.userprofile.portfolio)
+    manual_inputs = models.ManualInput.objects.filter(
+        user=request.user,
+        portfolio=request.user.userprofile.portfolio)
+    address_inputs = models.AddressInput.objects.filter(
+        user=request.user,
+        portfolio=request.user.userprofile.portfolio)
+
+    portfolio = request.user.userprofile.portfolio
+    if portfolio:
+        exchange_accounts = exchange_accounts.filter(portfolio=portfolio)
+        manual_inputs = manual_inputs.filter(portfolio=portfolio)
+        address_inputs = address_inputs.filter(portfolio=portfolio)
 
     if not exchange_accounts and not manual_inputs and not address_inputs:
-        return render(request, 'home.html', {'has_data': False})
+        return render(request, 'home.html', {
+            'has_data': False,
+            'portfolio_list': portfolio_list,
+        })
 
     market = Coinmarket()
     crypto_balances = models.get_aggregated_balances(
@@ -163,9 +178,10 @@ def home(request):
                                             user=request.user).timestamp
         except models.CurrencyTimestamp.DoesNotExist:
             balance['timestamp'] = ""
-        balance['addresses'] = models.AddressInput.objects\
-                                        .filter(user=request.user,
-                                                currency=balance['currency'])
+        balance['addresses'] = models.AddressInput.objects.filter(
+            user=request.user,
+            currency=balance['currency'],
+            portfolio=request.user.userprofile.portfolio)
 
         if 'amount_fiat' in balance and total_fiat != 0:
             balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
@@ -174,6 +190,7 @@ def home(request):
         request,
         'home.html',
         {
+            'portfolio_list': portfolio_list,
             'has_data': True,
             'fiat': fiat,
             'balances': balances,
@@ -203,6 +220,7 @@ def exchange(request, exchange_id):
         if form.is_valid():
             exchange_account, created = models.ExchangeAccount.objects.get_or_create(
                 user=request.user,
+                portfolio=request.user.userprofile.portfolio,
                 exchange=exchange
             )
             exchange_account.key = form.cleaned_data.get('key')
@@ -226,6 +244,7 @@ def exchange(request, exchange_id):
         try:
             exchange_account = models.ExchangeAccount.objects.get(
                 user=request.user,
+                portfolio=request.user.userprofile.portfolio,
                 exchange=exchange
             )
             exchange_balances = models.ExchangeBalance.objects.filter(
@@ -271,6 +290,7 @@ def signup(request):
 @transaction.atomic
 def change_details(request):
     if request.method == 'POST':
+
         form = forms.UserChangeDetailsForm(request.POST, instance=request.user)
         fiat_form = forms.UserChangeFiatForm(
             request.POST,
@@ -424,14 +444,18 @@ def manual_input(request):
     if request.method == 'POST':
         form = forms.ManualInputForm(request.POST, instance=manual_input)
         if form.is_valid():
-            form.save()
+            p = form.save(commit=False)
+            p.portfolio = request.user.userprofile.portfolio
+            p.save()
             messages.success(request, 'Balance added successfully!')
             return redirect('manual_input')
         else:
             messages.warning(request, 'There was an error adding balance!')
     else:
         form = forms.ManualInputForm(instance=manual_input)
-        balances = models.ManualInput.objects.filter(user=request.user)
+        balances = models.ManualInput.objects.filter(
+            user=request.user,
+            portfolio=request.user.userprofile.portfolio)
 
     context = {
         'form': form,
@@ -475,7 +499,8 @@ def address_input(request):
                 user=request.user,
                 currency=currency,
                 address=address,
-                amount=amount
+                amount=amount,
+                portfolio=request.user.userprofile.portfolio
             )
 
             messages.success(request, 'Address added successfully!')
@@ -484,7 +509,9 @@ def address_input(request):
             messages.warning(request, 'There was an error adding address!')
     else:
         form = forms.AddressInputForm(instance=address_input)
-        balances = models.AddressInput.objects.filter(user=request.user)
+        balances = models.AddressInput.objects.filter(
+            user=request.user,
+            portfolio=request.user.userprofile.portfolio)
 
     context = {
         'form': form,
@@ -509,3 +536,37 @@ def remove_address_input(request, address_input_id):
             request, 'There was an error removing address from your account!')
 
     return redirect('address_input')
+
+
+class PortfolioCreate(CreateView):
+    model = models.Portfolio
+    fields = ['name']
+
+    def form_valid(self, form):
+        p = form.save(commit=False)
+        p.user = self.request.user
+        p.save()
+        self.request.user.userprofile.portfolio = p
+        self.request.user.userprofile.save()
+        return redirect('details')
+
+
+class PortfolioDelete(DeleteView):
+    model = models.Portfolio
+    success_url = '/settings/details/'
+
+
+@login_required
+def portfolio_change(request):
+    portfolio_pk = request.GET.get('portfolio', None)
+    if portfolio_pk:
+        userprofile = request.user.userprofile
+        if portfolio_pk == '---':
+            userprofile.portfolio = None
+        else:
+            userprofile.portfolio = get_object_or_404(
+                models.Portfolio,
+                pk=portfolio_pk)
+        userprofile.save()
+
+    return redirect('home')

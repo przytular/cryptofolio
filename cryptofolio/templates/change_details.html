@@ -4,107 +4,181 @@
   <h3>User profile</h3>
   <hr>
   <form method="post">
-    {% csrf_token %}
+	{% csrf_token %}
 
-    <div class="form-group">
-        {% if form.first_name.errors %}
-        {% for error in form.first_name.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error|safe }}
-            </div>
-        {% endfor %}
-        {% endif %}
-        <div class="form-row">
-            <div class="col-md-4">
-                <label for="{{ form.first_name.id_for_label }}">
-                    {{ form.first_name.label }}:
-                </label>
-            </div>
-            <div class="col-md-8">
-                <input
-                    type="text"
-                    class="form-control"
-                    id="{{ form.first_name.id_for_label }}"
-                    name="{{ form.first_name.name }}"
-                    value="{{ form.first_name.value }}"
-                    placeholder="John"
-                 />
-                {% if form.first_name.help_text %}
-                <small class="form-text text-muted">
-                    {{ form.first_name.help_text|safe }}
-                </small>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	<div class="form-group">
+		{% if form.first_name.errors %}
+		{% for error in form.first_name.errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error|safe }}
+			</div>
+		{% endfor %}
+		{% endif %}
+		<div class="form-row">
+			<div class="col-md-4">
+				<label for="{{ form.first_name.id_for_label }}">
+					{{ form.first_name.label }}:
+				</label>
+			</div>
+			<div class="col-md-8">
+				<input
+					type="text"
+					class="form-control"
+					id="{{ form.first_name.id_for_label }}"
+					name="{{ form.first_name.name }}"
+					value="{{ form.first_name.value }}"
+					placeholder="John"
+				 />
+				{% if form.first_name.help_text %}
+				<small class="form-text text-muted">
+					{{ form.first_name.help_text|safe }}
+				</small>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 
-    <div class="form-group">
-        {% if form.last_name.errors %}
-        {% for error in form.last_name.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error|safe }}
-            </div>
-        {% endfor %}
-        {% endif %}
-        <div class="form-row">
-            <div class="col-md-4">
-                <label for="{{ form.last_name.id_for_label }}">
-                    {{ form.last_name.label }}:
-                </label>
-            </div>
-            <div class="col-md-8">
-                <input
-                    type="text"
-                    class="form-control"
-                    id="{{ form.last_name.id_for_label }}"
-                    name="{{ form.last_name.name }}"
-                    value="{{ form.last_name.value }}"
-                    placeholder="Doe"
-                 />
-                {% if form.last_name.help_text %}
-                <small class="form-text text-muted">
-                    {{ form.last_name.help_text|safe }}
-                </small>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	<div class="form-group">
+		{% if form.last_name.errors %}
+		{% for error in form.last_name.errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error|safe }}
+			</div>
+		{% endfor %}
+		{% endif %}
+		<div class="form-row">
+			<div class="col-md-4">
+				<label for="{{ form.last_name.id_for_label }}">
+					{{ form.last_name.label }}:
+				</label>
+			</div>
+			<div class="col-md-8">
+				<input
+					type="text"
+					class="form-control"
+					id="{{ form.last_name.id_for_label }}"
+					name="{{ form.last_name.name }}"
+					value="{{ form.last_name.value }}"
+					placeholder="Doe"
+				 />
+				{% if form.last_name.help_text %}
+				<small class="form-text text-muted">
+					{{ form.last_name.help_text|safe }}
+				</small>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 
-    <div class="form-group">
-        {% if fiat_form.fiat.errors %}
-        {% for error in fiat_form.fiat.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error|safe }}
-            </div>
-        {% endfor %}
-        {% endif %}
-        <div class="form-row">
-            <div class="col-md-4">
-                <label for="{{ fiat_form.fiat.id_for_label }}">
-                    {{ fiat_form.fiat.label }}:
-                </label>
-            </div>
-            <div class="col-md-8">
-                <select
-                    class="form-control"
-                    id="{{ fiat_form.fiat.id_for_label }}"
-                    name="{{ fiat_form.fiat.name }}">
-                    {% for value, text in fiat_form.fiat.field.choices %}
-                    <option value={{ value }} {% if value|stringformat:"s" == fiat_form.fiat.value %} selected {% endif %}>
-                        {{ text|capfirst }}
-                    </option>
-                    {% endfor %}
-                </select>
-                {% if fiat_form.fiat.help_text %}
-                <small class="form-text text-muted">
-                    {{ fiat_form.fiat.help_text|safe }}
-                </small>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	<div class="form-group">
+		{% if fiat_form.fiat.errors %}
+		{% for error in fiat_form.fiat.errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error|safe }}
+			</div>
+		{% endfor %}
+		{% endif %}
+		<div class="form-row">
+			<div class="col-md-4">
+				<label for="{{ fiat_form.fiat.id_for_label }}">
+					{{ fiat_form.fiat.label }}:
+				</label>
+			</div>
+			<div class="col-md-8">
+				<select
+					class="form-control"
+					id="{{ fiat_form.fiat.id_for_label }}"
+					name="{{ fiat_form.fiat.name }}">
+					{% for value, text in fiat_form.fiat.field.choices %}
+					<option value={{ value }} {% if value|stringformat:"s" == fiat_form.fiat.value %} selected {% endif %}>
+						{{ text|capfirst }}
+					</option>
+					{% endfor %}
+				</select>
+				{% if fiat_form.fiat.help_text %}
+				<small class="form-text text-muted">
+					{{ fiat_form.fiat.help_text|safe }}
+				</small>
+				{% endif %}
+			</div>
+		</div>
 
-    <button class="btn btn-primary" type="submit">Save</button>
+		{% if fiat_form.portfolio.errors %}
+		{% for error in fiat_form.portfolio.errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error|safe }}
+			</div>
+		{% endfor %}
+		{% endif %}
+		<div class="form-row">
+			<div class="col-md-4">
+				<label for="{{ fiat_form.portfolio.id_for_label }}">
+					{{ fiat_form.portfolio.label }}:
+				</label>
+			</div>
+			<div class="col-md-8">
+				<div class="form-group">
+					<div class="input-group">
+					<select
+						class="form-control"
+						id="{{ fiat_form.portfolio.id_for_label }}"
+						name="{{ fiat_form.portfolio.name }}">
+						<option value="">default</option>
+						{% for value, text in fiat_form.portfolio.field.choices %}
+						<option value={{ value }} {% if value == fiat_form.portfolio.value %} selected {% endif %}>
+							{{ text|capfirst }}
+						</option>
+						{% endfor %}
+					</select>
+					<div style="margin-left:1rem" class="input-group-append">
+					<a href="{% url 'portfolio-create' %}" data-toggle="modal" data-target="#portfolioModal" class="btn btn-primary">
+						New
+					</a>
+
+					{% if request.user.userprofile.portfolio %}
+					<a id="portfolio-rm-btn" href="{% url 'portfolio-delete' request.user.userprofile.portfolio.pk %}" class="btn btn-danger">
+						Delete current
+					</a>
+					{% endif %}
+					</div>
+				</div>
+					{% if fiat_form.portfolio.help_text %}
+					<small class="form-text text-muted">
+						{{ fiat_form.portfolio.help_text|safe }}
+					</small>
+					{% endif %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button class="btn btn-primary" type="submit">Save</button>
   </form>
+
+<!-- Modal -->
+<div class="modal fade" id="portfolioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add new portfolio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{% url 'portfolio-create' %}" method="POST">
+      <div class="modal-body">
+      	{% csrf_token %}
+        <input placeholder="New portfolio's name" type="text" class="form-control" name="name">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+  	  </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
