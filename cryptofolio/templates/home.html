@@ -2,6 +2,17 @@
 
 {% block title %} {{ user.username }}'s cryptofolio {% endblock %}
 
+{% block menuportfolios %}
+<form style="margin-left:1rem;" onchange="submit();" class="form-inline mr-auto" action="{% url 'portfolio-change' %}">
+    <select name='portfolio' class="form-control">
+            <option value="---">default</option>
+        {% for p in portfolio_list %}
+            <option value="{{ p.pk }}" 
+            {% if p.pk == request.user.userprofile.portfolio.pk %}selected{% endif %}>{{ p.name }}</option>
+        {% endfor %}
+    </select>
+</form>
+{% endblock menuportfolios %}
 {% block content %}
 
 {% load nvd3_tags %}
@@ -13,19 +24,6 @@
     {% endif %}
 </head>
 <body>
-    <div class="row py-2">
-        <div class="col-xs-12">
-            <form onchange="submit();" class="form-inline mr-auto" action="{% url 'portfolio-change' %}">
-                <select name='portfolio' class="form-control">
-                        <option value="---">default</option>
-                    {% for p in portfolio_list %}
-                        <option value="{{ p.pk }}" 
-                        {% if p.pk == request.user.userprofile.portfolio.pk %}selected{% endif %}>{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-        </div>
-    </div>
     {% if has_data == True %}
     <div class="row py-2">
         <div class="col-md-4">
@@ -35,12 +33,12 @@
         </div>
         <div class="col-md-8">
             <span>
-                {{ fiat_sum|floatformat:-8 }} {{ fiat }}
+                {{ fiat_sum|floatformat:-2 }} {{ fiat }}
             </span>
         </div>
     </div>
     <div>
-        <table class="table table-striped">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Currency</th>
