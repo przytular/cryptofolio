@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     self.stderr.write("%s %s" % (user.email, error))
 
             update_address_input_balances(user)
-            self.update_time_series(market, user)
+            # self.update_time_series(market, user)
 
     def update_time_series(self, market, user):
         self.stdout.write("Updating time series for %s" % (user.email))

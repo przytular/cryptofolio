@@ -72,10 +72,6 @@
         {% include_container fiat_piechart.chartcontainer 400 '100%' %}
     </div>
     <hr>
-    <div>
-        <h3>Cryptocurrency holdings over time in {{ fiat  }}</h3>
-        {% include_container time_series.chartcontainer 400 '100%' %}
-    </div>
     {% else %}
     <p>Nothing to show :(</p>
     <p>Please add API keys and secrets in <a href="{% url 'settings' %}">settings</a>!</p>
