@@ -105,6 +105,7 @@ class AddressInput(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     address = models.CharField(max_length=100)
     amount = models.FloatField(default=None, blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True)
     portfolio = models.ForeignKey(
         Portfolio,
         blank=True,

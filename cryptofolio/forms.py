@@ -83,4 +83,4 @@ class AddressInputForm(forms.ModelForm):
 
     class Meta:
         model = models.AddressInput
-        fields = ('currency', 'address', )
+        fields = ('currency', 'address', 'description')

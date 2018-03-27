@@ -57,7 +57,8 @@
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                        <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i></a>
+                        <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i>
+                        </a>{% if addr.description %}&nbsp;<small>({{ addr.description }})</small>{% endif %}
                         <br/>
                         {% endfor %}
                     </td>

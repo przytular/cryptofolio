@@ -493,6 +493,7 @@ def address_input(request):
             address_api = BalanceFromAddress()
             currency = form.cleaned_data['currency']
             address = form.cleaned_data['address']
+            description = form.cleaned_data['description']
             amount = address_api.getSingleBalance(currency, address)
 
             address_input = models.AddressInput.objects.create(
@@ -500,6 +501,7 @@ def address_input(request):
                 currency=currency,
                 address=address,
                 amount=amount,
+                description=description,
                 portfolio=request.user.userprofile.portfolio
             )
 
