@@ -260,7 +260,6 @@ def get_aggregated_balances(exchange_accounts, manual_inputs, address_inputs):
     return crypto_balances
 
 def apply_thousands_separator(amount, fiat):
-    if fiat == 'USD':
-        return "{:,}".format(round(amount, 2),)
-    elif fiat == 'CHF':
-        return "{:`}".format(round(amount, 2),)
+    result = "{:,}".format(round(amount, 2),)
+    if fiat == 'CHF':
+        return result.replace(',', '`')
