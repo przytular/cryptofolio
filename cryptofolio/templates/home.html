@@ -33,7 +33,7 @@
         </div>
         <div class="col-md-8">
             <span>
-                {{ fiat_sum|floatformat:-2 }} {{ fiat }}
+                {{ fiat_sum }} {{ fiat }}
             </span>
         </div>
     </div>
@@ -45,6 +45,8 @@
                     <th>Balance</th>
                     <th>Timestamp</th>
                     <th>Related addresses</th>
+                    <th>Wallet holdings</th>
+                    <th>Wallet description</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,10 +59,19 @@
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                        <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i>
-                        </a>{% if addr.description %}&nbsp;<small>({{ addr.description }})</small>{% endif %}
-                        <br/>
+                            <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i></a><br/>
                         {% endfor %}
+                    </td>
+                    <td>
+                        {% for addr in balance.addresses %}
+                            {{ addr.amount_in_fiat }} {{ fiat }}<br/>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for addr in balance.addresses %}
+                            {% if addr.description %}&nbsp;<small>({{ addr.description }})</small>{% endif %}<br/>
+                        {% endfor %}
+                    </td>
                     </td>
                 </tr>
                 {% endfor %}

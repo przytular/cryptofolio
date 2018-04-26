@@ -10,6 +10,7 @@ from encrypted_model_fields.fields import EncryptedCharField
 
 from .api.API import API
 from .api.BalanceFromAddress import BalanceFromAddress
+from .api.Coinmarket import Coinmarket
 
 
 class Currency(models.Model):
@@ -134,6 +135,12 @@ class AddressInput(models.Model):
             addr = "#"
         return addr
 
+    @property
+    def amount_in_fiat(self):
+        fiat = self.user.userprofile.fiat
+        market = Coinmarket()
+        balances, other_balances = market.convertToFiat({self.currency: self.amount}, fiat)
+        return apply_thousands_separator(balances[0]['amount_fiat'], fiat)
 
 class TimeSeries(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -251,3 +258,9 @@ def get_aggregated_balances(exchange_accounts, manual_inputs, address_inputs):
             crypto_balances[currency] = amount
 
     return crypto_balances
+
+def apply_thousands_separator(amount, fiat):
+    if fiat == 'USD':
+        return "{:,}".format(round(amount, 2),)
+    elif fiat == 'CHF':
+        return "{:`}".format(round(amount, 2),)

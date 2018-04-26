@@ -195,7 +195,7 @@ def home(request):
             'fiat': fiat,
             'balances': balances,
             'other_balances': other_balances,
-            'fiat_sum': total_fiat,
+            'fiat_sum': models.apply_thousands_separator(total_fiat, fiat),
             'fiat_piechart': __get_fiat_piechart(balances, fiat),
             'time_series': __get_time_series_chart_old(user_time_series, fiat),
             #            'time_series': __get_time_series_chart(balance_time_series, fiat),
