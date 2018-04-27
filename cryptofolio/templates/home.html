@@ -64,12 +64,12 @@
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                            {{ addr.amount_in_fiat }} {{ fiat }}<br/>
+                            {{ addr.amount }} {{ addr.currency }}<br/>
                         {% endfor %}
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                            {% if addr.description %}&nbsp;<small>({{ addr.description }})</small>{% endif %}<br/>
+                            {% if addr.description %}&nbsp;<small>{{ addr.description }}</small>{% endif %}<br/>
                         {% endfor %}
                     </td>
                     </td>
