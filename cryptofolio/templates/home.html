@@ -64,7 +64,7 @@
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                            {{ addr.amount|floatformat:-2 }}&nbsp;{{ addr.currency }}<br/>
+                            {{ addr.amount }}&nbsp;{{ addr.currency }}<br/>
                         {% endfor %}
                     </td>
                     <td>
