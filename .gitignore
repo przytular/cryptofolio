@@ -21,6 +21,7 @@ local_settings.py
 .venv
 venv/
 ENV/
+env3/
 
 # sqlite
 *.sqlite

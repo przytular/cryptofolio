@@ -104,7 +104,7 @@ class AddressInput(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     currency = models.CharField(max_length=10)
     timestamp = models.DateTimeField(auto_now=True)
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=111)
     amount = models.FloatField(default=None, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)
     portfolio = models.ForeignKey(

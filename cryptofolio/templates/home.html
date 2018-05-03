@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ user.username }}'s cryptofolio {% endblock %}
+{% block title %} {{ user.username }}'s moonfolio {% endblock %}
 
 {% block menuportfolios %}
 <form style="margin-left:1rem;" onchange="submit();" class="form-inline mr-auto" action="{% url 'portfolio-change' %}">
@@ -59,7 +59,7 @@
                     </td>
                     <td>
                         {% for addr in balance.addresses %}
-                            <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address }}&nbsp;<i class="fas fa-external-link-alt"></i></a><br/>
+                            <a target="_blank" href="{{ addr.block_explorer_link }}">{{ addr.address|truncatechars:34 }}&nbsp;<i class="fas fa-external-link-alt"></i></a><br/>
                         {% endfor %}
                     </td>
                     <td>
