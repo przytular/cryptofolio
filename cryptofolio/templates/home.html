@@ -11,6 +11,7 @@
             {% if p.pk == request.user.userprofile.portfolio.pk %}selected{% endif %}>{{ p.name }}</option>
         {% endfor %}
     </select>
+    &nbsp;&nbsp;<button type="button" data-toggle="modal" data-target="#portfolioModal" class="btn btn-circle btn-sm btn-secondary waves-effect waves-dark">+</button>
 </form>
 {% endblock menuportfolios %}
 {% block content %}
@@ -35,6 +36,8 @@
             <span>
                 {{ fiat_sum }} {{ fiat }}
             </span>
+            
+            <button type="button" data-toggle="modal" data-target="#balanceModal" class="float-right btn btn-success waves-effect waves-dark"><i class="mdi mdi-plus-circle"></i> Add balance</button>
         </div>
     </div>
     <div>
@@ -88,6 +91,121 @@
     <p>Nothing to show :(</p>
     <p>Please add API keys and secrets in <a href="{% url 'settings' %}">settings</a>!</p>
     {% endif %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="portfolioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add new portfolio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{% url 'portfolio-create' %}?redirect=/" method="POST">
+      <div class="modal-body">
+        {% csrf_token %}
+        <input placeholder="New portfolio's name" type="text" class="form-control" name="name">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add new balance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form method="post" action="{% url 'manual_input' %}?redirect=/">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {% if balance_form.currency.errors %}
+                {% for error in balance_form.currency.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|safe }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="{{ balance_form.currency.id_for_label }}">
+                            {{ balance_form.currency.label }}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <select
+                            class="form-control"
+                            id="{{ balance_form.currency.id_for_label }}"
+                            name="{{ balance_form.currency.name }}">
+                            {% for value, text in balance_form.currency.field.choices %}
+                            <option value={{ value }} {% if value|stringformat:"s" == balance_form.currency.value %} selected {% endif %}>
+                            {{ text|capfirst }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        {% if balance_form.currency.help_text %}
+                        <small class="form-text text-muted">
+                            {{ balance_form.currency.help_text|safe }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {% if balance_form.amount.errors %}
+                {% for error in balance_form.amount.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|safe }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="{{ balance_form.amount.id_for_label }}">
+                            {{ balance_form.amount.label }}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="{{ balance_form.amount.id_for_label }}"
+                            name="{{ balance_form.amount.name }}"
+                            value="{{ balance_form.amount.value|default_if_none:"0" }}"
+                        />
+                        {% if balance_form.amount.help_text %}
+                        <small class="form-text text-muted">
+                            {{ balance_form.amount.help_text|safe }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <input type="submit" class="text-white form-control btn btn-primary" value="Add">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
 </body>
 
 {% endblock %}

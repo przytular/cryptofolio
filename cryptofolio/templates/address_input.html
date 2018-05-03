@@ -124,8 +124,8 @@
             {% for balance in balances %}
             <tr>
                 <td>{{ balance.currency  }}</td>
-                <td>{{ balance.address  }}</td>
-                <td>{{ balance.amount| floatformat:8 }}</td>
+                <td>{{ balance.address|truncatechars:34  }}</td>
+                <td>{{ balance.amount|floatformat:8 }}</td>
                 <td>{{ balance.timestamp }}</td>
                 <td>{{ balance.description }}</td>
                 <td>

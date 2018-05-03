@@ -185,6 +185,9 @@ def home(request):
 
         if 'amount_fiat' in balance and total_fiat != 0:
             balance['amount_fiat_pct'] = 100. * balance['amount_fiat'] / total_fiat
+    
+    manual_input = models.ManualInput(user=request.user)
+    balance_form = forms.ManualInputForm(instance=manual_input)
 
     return render(
         request,
@@ -198,6 +201,7 @@ def home(request):
             'fiat_sum': models.apply_thousands_separator(total_fiat, fiat),
             'fiat_piechart': __get_fiat_piechart(balances, fiat),
             'time_series': __get_time_series_chart_old(user_time_series, fiat),
+            'balance_form': balance_form
             #            'time_series': __get_time_series_chart(balance_time_series, fiat),
         }
     )
@@ -448,7 +452,11 @@ def manual_input(request):
             p.portfolio = request.user.userprofile.portfolio
             p.save()
             messages.success(request, 'Balance added successfully!')
-            return redirect('manual_input')
+            _redirect = request.GET.get('redirect', None)
+            if _redirect:
+                return redirect(_redirect)
+            else:
+                return redirect('manual_input')
         else:
             messages.warning(request, 'There was an error adding balance!')
     else:
@@ -550,7 +558,11 @@ class PortfolioCreate(CreateView):
         p.save()
         self.request.user.userprofile.portfolio = p
         self.request.user.userprofile.save()
-        return redirect('details')
+        _redirect = self.request.GET.get('redirect', None)
+        if _redirect:
+            return redirect(_redirect)
+        else:
+            return redirect('details')
 
 
 class PortfolioDelete(DeleteView):
