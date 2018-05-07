@@ -37,7 +37,7 @@
                 {{ fiat_sum }} {{ fiat }}
             </span>
             
-            <button type="button" data-toggle="modal" data-target="#balanceModal" class="float-right btn btn-success waves-effect waves-dark"><i class="mdi mdi-plus-circle"></i> Add balance</button>
+            <button type="button" data-toggle="modal" data-target="#addPositionModal" class="float-right btn btn-success waves-effect waves-dark"><i class="mdi mdi-plus-circle"></i> Add position</button>
         </div>
     </div>
     <div>
@@ -117,16 +117,27 @@
   </div>
 </div>
 
-<div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addPositionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add new balance</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add position</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form method="post" action="{% url 'manual_input' %}?redirect=/">
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <select id="addPositionSelect" class="form-control">
+                        <option value="1" selected="selected">Add manual balance</option>
+                        <option value="2">Add wallet address</option>
+                        <option value="3">Add exchange keys</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <form id="addPositionmanualInput" method="post" action="{% url 'manual_input' %}?redirect=/">
             {% csrf_token %}
 
             <div class="form-group">
@@ -202,11 +213,160 @@
                 </div>
             </div>
         </form>
+
+        <form id="addPositionAddress" method="post" action="{% url 'address_input' %}?redirect=/">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {% if address_form.currency.errors %}
+                {% for error in address_form.currency.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|safe }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="{{ address_form.currency.id_for_label }}">
+                            {{ address_form.currency.label }}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <select
+                            class="form-control"
+                            id="{{ address_form.currency.id_for_label }}"
+                            name="{{ address_form.currency.name }}">
+                            {% for value, text in address_form.currency.field.choices %}
+                            <option value={{ value }} {% if value|stringformat:"s" == address_form.currency.value %} selected {% endif %}>
+                            {{ text|capfirst }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        {% if address_form.currency.help_text %}
+                        <small class="form-text text-muted">
+                            {{ address_form.currency.help_text|safe }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {% if address_form.address.errors %}
+                {% for error in address_form.address.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|safe }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="{{ address_form.address.id_for_label }}">
+                            {{ address_form.address.label }}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="{{ address_form.address.id_for_label }}"
+                            name="{{ address_form.address.name }}"
+                            value="{{ address_form.address.value|default_if_none:"0" }}"
+                        />
+                        {% if address_form.address.help_text %}
+                        <small class="form-text text-muted">
+                            {{ address_form.address.help_text|safe }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                {% if address_form.description.errors %}
+                {% for error in address_form.description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|safe }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="{{ address_form.description.id_for_label }}">
+                            {{ address_form.description.label }}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="{{ address_form.description.id_for_label }}"
+                            name="{{ address_form.description.name }}"
+                            value="{{ address_form.description.value|default_if_none:"0" }}"
+                        />
+                        {% if address_form.description.help_text %}
+                        <small class="form-text text-muted">
+                            {{ address_form.description.help_text|safe }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <input type="submit" class="text-white form-control btn btn-primary" value="Add">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="addPositionExchange">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <h4>Please select exchange</h4>
+                            <div class="list-group">
+                                {% for exchange in exchanges %}
+                                <a
+                                    class="list-group-item list-group-item-action"
+                                    href="{% url 'exchange' exchange.name %}">
+                                    {{exchange.name}}
+                                </a>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 </div>
 
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+
+$("#addPositionSelect").val('1');
+$("#addPositionAddress").hide()
+$("#addPositionExchange").hide()
+
+$('#addPositionSelect').on('change', function() {
+    var val = this.value;
+    if (val == '1') {
+        $("#addPositionmanualInput").show()
+        $("#addPositionAddress").hide()
+        $("#addPositionExchange").hide()
+    } else if (val == '2') {
+        $("#addPositionmanualInput").hide()
+        $("#addPositionAddress").show()
+        $("#addPositionExchange").hide()
+    } else if (val == '3') {
+        $("#addPositionmanualInput").hide()
+        $("#addPositionAddress").hide()
+        $("#addPositionExchange").show()
+    }
+});
+</script>
 
 {% endblock %}
 

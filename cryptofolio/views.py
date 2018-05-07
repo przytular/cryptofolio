@@ -189,6 +189,22 @@ def home(request):
     manual_input = models.ManualInput(user=request.user)
     balance_form = forms.ManualInputForm(instance=manual_input)
 
+    try:
+        exchange_account = models.ExchangeAccount.objects.get(
+            user=request.user,
+            portfolio=request.user.userprofile.portfolio,
+            exchange=exchange
+        )
+        exchange_balances = models.ExchangeBalance.objects.filter(
+            exchange_account=exchange_account)
+
+        exchange_form = forms.ExchangeAccountForm(instance=exchange_account)
+    except ObjectDoesNotExist:
+        exchange_form = forms.ExchangeAccountForm()
+
+    address_input = models.AddressInput(user=request.user)
+    address_form = forms.AddressInputForm(instance=address_input)
+    exchanges = models.Exchange.objects.all()
     return render(
         request,
         'home.html',
@@ -201,7 +217,9 @@ def home(request):
             'fiat_sum': models.apply_thousands_separator(total_fiat, fiat),
             'fiat_piechart': __get_fiat_piechart(balances, fiat),
             'time_series': __get_time_series_chart_old(user_time_series, fiat),
-            'balance_form': balance_form
+            'balance_form': balance_form,
+            'address_form': address_form,
+            'exchanges': exchanges
             #            'time_series': __get_time_series_chart(balance_time_series, fiat),
         }
     )
@@ -241,7 +259,11 @@ def exchange(request, exchange_id):
             else:
                 messages.success(request, 'Exchange updated successfully!')
 
-            return redirect('exchange', exchange_id=exchange)
+            _redirect = request.GET.get('redirect', None)
+            if _redirect:
+                return redirect(_redirect)
+            else:
+                return redirect('exchange', exchange_id=exchange)
         else:
             messages.warning(request, 'There was an error adding exchange!')
     else:
@@ -514,7 +536,11 @@ def address_input(request):
             )
 
             messages.success(request, 'Address added successfully!')
-            return redirect('address_input')
+            _redirect = request.GET.get('redirect', None)
+            if _redirect:
+                return redirect(_redirect)
+            else:
+                return redirect('address_input')
         else:
             messages.warning(request, 'There was an error adding address!')
     else:
