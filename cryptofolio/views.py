@@ -153,9 +153,19 @@ def home(request):
         address_inputs = address_inputs.filter(portfolio=portfolio)
 
     if not exchange_accounts and not manual_inputs and not address_inputs:
+
+        manual_input = models.ManualInput(user=request.user)
+        balance_form = forms.ManualInputForm(instance=manual_input)
+        address_input = models.AddressInput(user=request.user)
+        address_form = forms.AddressInputForm(instance=address_input)
+        exchanges = models.Exchange.objects.all()
+
         return render(request, 'home.html', {
             'has_data': False,
             'portfolio_list': portfolio_list,
+            'balance_form': balance_form,
+            'address_form': address_form,
+            'exchanges': exchanges
         })
 
     market = Coinmarket()
@@ -188,7 +198,6 @@ def home(request):
     
     manual_input = models.ManualInput(user=request.user)
     balance_form = forms.ManualInputForm(instance=manual_input)
-
     try:
         exchange_account = models.ExchangeAccount.objects.get(
             user=request.user,
