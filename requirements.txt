@@ -3,7 +3,7 @@ attrs==17.3.0
 autobahn==17.10.1
 Automat==0.6.0
 bintrees==2.0.7
-bip32utils==0.3.post3
+-e git+https://github.com/prusnak/bip32utils@d78d7b823908df5169faaef2efe908852181737d#egg=bip32utils
 certifi==2017.11.5
 cffi==1.11.2
 chardet==3.0.4
@@ -60,6 +60,7 @@ Twisted==17.9.0
 txaio==2.8.2
 Unidecode==0.4.21
 urllib3==1.22
+-e git+https://github.com/matthewdowney/wallet-utils.git@3e9aedabf245ebb0d83ed4e3c8d01ffa33ac83ac#egg=wallet_utils
 websocket-client==0.40.0
 whitenoise==3.3.1
 zope.interface==4.4.3
