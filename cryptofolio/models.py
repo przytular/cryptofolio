@@ -121,6 +121,7 @@ class AddressInput(models.Model):
     def block_explorer_link(self):
         if self.currency == 'BTC':
             addr = 'https://blockchain.info/de/address/{}'.format(self.address)
+
         elif self.currency == 'BCH':
             addr = 'https://blockdozer.com/insight/address/bitcoincash:{}'\
                                                     .format(self.address)
