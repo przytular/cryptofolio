@@ -23,7 +23,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     # production
-    'moonfolio-dev.herokuapp.com'
+    'moonfolio-dev.herokuapp.com',
+    'warren-application.herokuapp.com'
+
 ]
 
 # Application definition
