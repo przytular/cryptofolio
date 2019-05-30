@@ -3,7 +3,6 @@ attrs==17.3.0
 autobahn==17.10.1
 Automat==0.6.0
 bintrees==2.0.7
--e git+https://github.com/prusnak/bip32utils@d78d7b823908df5169faaef2efe908852181737d#egg=bip32utils
 certifi==2017.11.5
 cffi==1.11.2
 chardet==3.0.4
@@ -21,7 +20,7 @@ django-tag-parser==2.1
 django-twitter-bootstrap==3.3.0
 dominate==2.1.17
 ecdsa==0.13
-gdax
+#gdax
 gunicorn==19.7.1
 hyperlink==17.3.1
 idna==2.6
