@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class WarrenConfig(AppConfig):
+class CryptofolioConfig(AppConfig):
     name = 'cryptofolio'
 
     def ready(self):
